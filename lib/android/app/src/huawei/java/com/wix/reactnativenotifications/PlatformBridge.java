@@ -21,9 +21,8 @@ public class PlatformBridge {
     public static void requestNewToken(Context context, IOnNewToken onNewToken) {
 
         String appId = getHuaweiAppId(context);
-//        if (BuildConfig.DEBUG) {
-        Log.e("huawei app id ~>", appId);
-//        }
+        if (BuildConfig.DEBUG) Log.e("huawei app id ~>", appId);
+        
         new Thread() {
             @Override
             public void run() {
