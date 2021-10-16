@@ -77,22 +77,15 @@ android {
         }
     }
 
-
-    flavorDimensions "RNNotifications.reactNativeVersion"
+    flavorDimensions "osPlatform"
     productFlavors {
-        reactNative59 {
-            dimension "RNNotifications.reactNativeVersion"
+        huawei {
+            dimension "osPlatform"
+            buildConfigField "String", "OS_PLATFORM", "\"huawei\""
         }
-        reactNative60 {
-            dimension "RNNotifications.reactNativeVersion"
-        }
-    }
-
-    def flavor = resolveFlavor()
-    variantFilter { variant ->
-        def names = variant.flavors*.name
-        if (!names.contains(flavor)) {
-            setIgnore(true)
+        google {
+            dimension "osPlatform"
+            buildConfigField "String", "OS_PLATFORM", "\"google\""
         }
     }
 
@@ -123,9 +116,10 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:$kotlinStdlib:$kotlinVersion"
-    implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
-    implementation 'com.facebook.react:react-native:+'
+    googleImplementation "com.google.firebase:firebase-messaging:$firebaseVersion"
+    huaweiImplementation 'com.huawei.hms:push:5.1.1.301'
 
+    implementation 'com.facebook.react:react-native:+'
     // tests
     testImplementation 'junit:junit:4.12'
     testImplementation "org.robolectric:robolectric:4.3"

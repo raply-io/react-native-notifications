@@ -7,8 +7,8 @@ import android.util.Log;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.ReactContext;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.wix.reactnativenotifications.BuildConfig;
+import com.wix.reactnativenotifications.PlatformBridge;
 import com.wix.reactnativenotifications.core.JsIOHelper;
 
 import static com.wix.reactnativenotifications.Defs.LOGTAG;
@@ -72,19 +72,14 @@ public class FcmToken implements IFcmToken {
     }
 
     protected void refreshToken() {
-        FirebaseMessaging.getInstance().getToken()
-            .addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    if (BuildConfig.DEBUG) Log.w(LOGTAG, "Fetching FCM registration token failed", task.getException());
-                    return;
-                }
-                sToken = task.getResult();
-                if (mAppContext instanceof IFcmTokenListenerApplication) {
-                    ((IFcmTokenListenerApplication) mAppContext).onNewFCMToken(sToken);
-                }
-                if (BuildConfig.DEBUG) Log.i(LOGTAG, "FCM has a new token" + "=" + sToken);
-                sendTokenToJS();
-            });
+        PlatformBridge.requestNewToken(mAppContext, (String token) -> {
+            Log.e(LOGTAG, "FCM has a new token" + "=" + sToken);
+            sToken = token;
+            if (mAppContext instanceof IFcmTokenListenerApplication) {
+                ((IFcmTokenListenerApplication) mAppContext).onNewFCMToken(sToken);
+            }
+            sendTokenToJS();
+        });
     }
 
     protected void sendTokenToJS() {

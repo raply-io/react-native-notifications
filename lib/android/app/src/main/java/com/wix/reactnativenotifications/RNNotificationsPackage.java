@@ -9,7 +9,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
-import com.google.firebase.FirebaseApp;
 import com.wix.reactnativenotifications.core.AppLifecycleFacade;
 import com.wix.reactnativenotifications.core.AppLifecycleFacadeHolder;
 import com.wix.reactnativenotifications.core.InitialNotificationHolder;
@@ -30,8 +29,7 @@ public class RNNotificationsPackage implements ReactPackage, AppLifecycleFacade.
 
     public RNNotificationsPackage(Application application) {
         mApplication = application;
-        FirebaseApp.initializeApp(application.getApplicationContext());
-
+        PlatformBridge.initialize(application);
         AppLifecycleFacadeHolder.get().addVisibilityListener(this);
         application.registerActivityLifecycleCallbacks(this);
     }
